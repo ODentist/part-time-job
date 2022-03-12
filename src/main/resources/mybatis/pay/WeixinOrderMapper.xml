@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.pay.weixinpay.mapper.WeixinOrderMapper">
+
+    <resultMap type="WeixinOrder" id="WeixinOrderResult">
+        <result property="orderNo"    column="order_no"    />
+        <result property="userId"    column="user_id"    />
+        <result property="amount"    column="amount"    />
+        <result property="status"    column="status"    />
+        <result property="payTime"    column="pay_time"    />
+        <result property="describe"    column="describe_info"    />
+    </resultMap>
+
+    <sql id="selectWeixinOrderVo">
+        select order_no, user_id, amount, status, pay_time, describe_info from weixin_order
+    </sql>
+
+    <select id="selectWeixinOrderList" parameterType="WeixinOrder" resultMap="WeixinOrderResult">
+        <include refid="selectWeixinOrderVo"/>
+        <where>
+            <if test="orderNo != null "> and order_no = #{orderNo}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="amount != null "> and amount = #{amount}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+
+    <select id="selectWeixinOrderById" parameterType="String" resultMap="WeixinOrderResult">
+        <include refid="selectWeixinOrderVo"/>
+        where order_no = #{orderNo}
+    </select>
+
+    <insert id="insertWeixinOrder" parameterType="WeixinOrder">
+        insert into weixin_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderNo != null  and orderNo != ''">order_no,</if>
+            <if test="userId != null ">user_id,</if>
+            <if test="amount != null ">amount,</if>
+            <if test="status != null ">status,</if>
+            <if test="payTime != null ">pay_time,</if>
+            <if test="describe != null  and describe != ''">describe_info,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderNo != null  and orderNo != ''">#{orderNo},</if>
+            <if test="userId != null ">#{userId},</if>
+            <if test="amount != null ">#{amount},</if>
+            <if test="status != null ">#{status},</if>
+            <if test="payTime != null ">#{payTime},</if>
+            <if test="describe != null  and describe != ''">#{describe},</if>
+        </trim>
+    </insert>
+
+    <update id="updateWeixinOrder" parameterType="WeixinOrder">
+        update weixin_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null ">user_id = #{userId},</if>
+            <if test="amount != null ">amount = #{amount},</if>
+            <if test="status != null ">status = #{status},</if>
+            <if test="payTime != null ">pay_time = #{payTime},</if>
+            <if test="describe != null ">describe_info = #{describe},</if>
+        </trim>
+        where order_no = #{orderNo}
+    </update>
+
+
+
+</mapper>
