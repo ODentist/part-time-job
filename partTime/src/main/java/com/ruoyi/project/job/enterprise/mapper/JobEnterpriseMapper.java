@@ -1,6 +1,8 @@
 package com.ruoyi.project.job.enterprise.mapper;
 
 import com.ruoyi.project.job.enterprise.domain.JobEnterprise;
+import com.ruoyi.project.system.dashboard.domain.EnterpriseDto;
+
 import java.util.List;
 
 /**
@@ -60,4 +62,27 @@ public interface JobEnterpriseMapper
      * @return 结果
      */
     public int deleteJobEnterpriseByIds(String[] ids);
+
+    /**
+     *
+     * @return  共有多少家企业
+     */
+    public int selectAllEnterpriseCounts();
+
+    /**
+     * 昨天共有多少家企业注册
+     * @return
+     */
+    public int yesterdayRegister();
+
+    /**
+     * 今天共有多少家企业注册
+     * @return
+     */
+    public int todayRegister();
+
+    /**
+     * 查询企业名字和地址
+     */
+    List<EnterpriseDto> selectEnterpriseNameAndAddress();
 }

@@ -63,7 +63,9 @@
             </div>
         </div>
     </div>
+
     <th:block th:include="include :: footer" />
+
     <script th:inline="javascript">
         var positionTypeDatas = [[${@dict.getType('job_position_type')}]];
         var areaDatas = [[${@dict.getType('job_area')}]];

@@ -73,4 +73,9 @@ public class IndexController extends BaseController
         mmap.put("version", ruoYiConfig.getVersion());
         return "main";
     }
+
+//    @GetMapping("/dashboard")
+//    public String dashboard(){
+//        return "dashboard";
+//    }
 }

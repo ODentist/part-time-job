@@ -2,6 +2,9 @@ package com.ruoyi.project.job.position.mapper;
 
 import com.ruoyi.project.job.position.domain.JobPosition;
 import com.ruoyi.project.job.position.vo.DeliveryDetailVO;
+import com.ruoyi.project.system.dashboard.domain.EnterpriseDto;
+import com.ruoyi.project.system.dashboard.domain.IndustryDto;
+import com.ruoyi.project.system.dashboard.domain.PositionDto;
 
 import java.util.List;
 
@@ -70,4 +73,16 @@ public interface JobPositionMapper
     public int deleteJobPositionByIds(String[] positionIds);
 
     public List<DeliveryDetailVO> selectJobPositionResumeList(DeliveryDetailVO deliveryDetailVO);
+
+    /**
+     * 查询职位对应的数量
+     * @return
+     */
+    public List<IndustryDto> selectPositionAndCounts();
+
+    /**
+     * 查询职位对应的薪水
+     * @return
+     */
+    public List<PositionDto> selectPositionSalary();
 }

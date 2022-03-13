@@ -125,4 +125,27 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
         </where>
     </select>
-</mapper>
+
+    <select id="selectAllEnterpriseCounts" resultType="Integer">
+        select count(*) from job_enterprise;
+    </select>
+
+    <select id="yesterdayRegister" resultType="Integer">
+        select count(*) from job_enterprise
+        where to_days(`create_time`) >= to_days(now())-2
+        and to_days(now())-1 >=to_days(`create_time`);
+    </select>
+
+    <select id="todayRegister" resultType="Integer">
+        select count(*) from job_enterprise
+        where create_time >= date(now())
+        and DATE_ADD(date(now()),INTERVAL 1 DAY) >create_time;
+    </select>
+
+    <select id="selectEnterpriseNameAndAddress" resultType="com.ruoyi.project.system.dashboard.domain.EnterpriseDto">
+        select name,address
+        from job_enterprise
+        order by create_time desc
+        limit 20;
+    </select>
+ </mapper>

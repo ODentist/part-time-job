@@ -127,4 +127,30 @@ public interface UserMapper
      * @return
      */
     public User getRandUser();
+
+    /**
+     * 查询用户总数
+     * @return
+     */
+    public int selectAllUserCounts();
+
+    /**
+     * 查询今天注册的用户
+     */
+    public int selectTodayRegister();
+
+    /**
+     * 查询昨天注册的用户
+     */
+    public int selectYesterdayRegister();
+
+    /**
+     * 查询男求职者人数
+     */
+    public int selectManUser();
+
+    /**
+     * 查询女求职者人数
+     */
+    public int selectWomanUser();
 }

@@ -493,4 +493,45 @@ public class UserServiceImpl implements IUserService
     {
         return userMapper.updateUser(user);
     }
+
+    /**
+     * 查询用户总数
+     * @return
+     */
+    @Override
+    public int selectAllUserCounts() {
+        return userMapper.selectAllUserCounts();
+    }
+
+    /**
+     * 查询今天注册的用户
+     */
+    @Override
+    public int todayRegister() {
+        return userMapper.selectTodayRegister();
+    }
+
+    /**
+     * 查询昨天注册的用户
+     */
+    @Override
+    public int yesterdayRegister() {
+        return userMapper.selectYesterdayRegister();
+    }
+
+    /**
+     * 查询男求职者人数
+     */
+    @Override
+    public int manUser() {
+        return userMapper.selectManUser();
+    }
+
+    /**
+     * 查询女求职者人数
+     */
+    @Override
+    public int womanUser() {
+        return userMapper.selectWomanUser();
+    }
 }

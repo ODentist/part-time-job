@@ -10,6 +10,7 @@ import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.security.ShiroUtils;
 import com.ruoyi.project.job.position.domain.JobPosition;
 import com.ruoyi.project.job.position.mapper.JobPositionMapper;
+import com.ruoyi.project.system.dashboard.domain.EnterpriseDto;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -123,4 +124,40 @@ public class JobEnterpriseServiceImpl implements IJobEnterpriseService
     {
         return jobEnterpriseMapper.deleteJobEnterpriseById(id);
     }
+
+    /**
+     *
+     * @return  共有多少家企业
+     */
+    @Override
+    public int selectAllEnterpriseCounts() {
+        return jobEnterpriseMapper.selectAllEnterpriseCounts();
+    }
+
+    /**
+     * 昨天共有多少家企业注册
+     * @return
+     */
+    @Override
+    public int yesterdayRegister() {
+        return jobEnterpriseMapper.yesterdayRegister();
+    }
+
+    /**
+     * 今天共有多少家企业注册
+     * @return
+     */
+    @Override
+    public int todayRegister() {
+        return jobEnterpriseMapper.todayRegister();
+    }
+
+    /**
+     * 查询企业名字和地址
+     */
+    @Override
+    public List<EnterpriseDto> selectEnterpriseNameAndAddress() {
+        return jobEnterpriseMapper.selectEnterpriseNameAndAddress();
+    }
+
 }

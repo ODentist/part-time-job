@@ -122,4 +122,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	ORDER BY
 	a.receive_time DESC
     </select>
+
+    <select id="selectPositionAndCounts" resultType="com.ruoyi.project.system.dashboard.domain.IndustryDto">
+        SELECT position_name as name,COUNT(position_name) as count
+        FROM `job_position`
+        GROUP BY position_name
+        ORDER BY count desc
+        limit 6;
+    </select>
+
+    <select id="selectPositionSalary" resultType="com.ruoyi.project.system.dashboard.domain.PositionDto">
+        select position_name as name,position_salary as salary
+        from job_position
+        order by create_time desc
+        limit 20;
+    </select>
 </mapper>

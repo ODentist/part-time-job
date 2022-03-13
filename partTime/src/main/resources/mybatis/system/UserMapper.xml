@@ -228,4 +228,27 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     ORDER BY RAND()
     LIMIT 1
 	</select>
+
+	<select id="selectAllUserCounts" resultType="Integer">
+		select count(*) from sys_user;
+	</select>
+
+	<select id="selectTodayRegister" resultType="Integer">
+		select count(*) from sys_user
+		where create_time >= date(now())
+		and DATE_ADD(date(now()),INTERVAL 1 DAY) > create_time ;
+	</select>
+
+	<select id="selectYesterdayRegister" resultType="Integer">
+		select count(*) from `sys_user`
+		where to_days(`create_time`) >= to_days(now())-2 and to_days(now())-1 >=to_days(`create_time`) ;
+	</select>
+
+	<select id="selectManUser" resultType="Integer">
+		select count(*) from sys_user where sex=0;
+	</select>
+
+	<select id="selectWomanUser" resultType="Integer">
+		select count(*) from sys_user where sex=1;
+	</select>
 </mapper> 

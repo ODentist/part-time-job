@@ -11,6 +11,9 @@ import com.ruoyi.project.job.receive.domain.JobReceiveDetail;
 import com.ruoyi.project.job.receive.mapper.JobReceiveDetailMapper;
 import com.ruoyi.project.job.resume.domain.JobResume;
 import com.ruoyi.project.job.resume.mapper.JobResumeMapper;
+import com.ruoyi.project.system.dashboard.domain.EnterpriseDto;
+import com.ruoyi.project.system.dashboard.domain.IndustryDto;
+import com.ruoyi.project.system.dashboard.domain.PositionDto;
 import com.ruoyi.project.system.dict.mapper.DictDataMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -161,4 +164,19 @@ public class JobPositionServiceImpl implements IJobPositionService
 
         return operationVO;
     }
+
+    /**
+     * 查询职位对应数量
+     */
+    @Override
+    public List<IndustryDto> selectPositionAndCounts() {
+        return jobPositionMapper.selectPositionAndCounts();
+    }
+
+    @Override
+    public List<PositionDto> selectPositionSalary() {
+        return jobPositionMapper.selectPositionSalary();
+    }
+
+
 }

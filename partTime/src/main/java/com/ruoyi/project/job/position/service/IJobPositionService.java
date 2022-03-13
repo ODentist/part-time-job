@@ -3,6 +3,9 @@ package com.ruoyi.project.job.position.service;
 import com.ruoyi.project.job.position.domain.JobPosition;
 import com.ruoyi.project.job.position.vo.DeliveryDetailVO;
 import com.ruoyi.project.job.position.vo.OperationVO;
+import com.ruoyi.project.system.dashboard.domain.EnterpriseDto;
+import com.ruoyi.project.system.dashboard.domain.IndustryDto;
+import com.ruoyi.project.system.dashboard.domain.PositionDto;
 
 import java.util.List;
 
@@ -88,4 +91,15 @@ public interface IJobPositionService
      * @return
      */
     public OperationVO selectOperating(Long receiveId, Long resumeId);
+
+    /**
+     * 查询职位对应数量
+     */
+    public List<IndustryDto> selectPositionAndCounts();
+
+    /**
+     * 查询职位对应的薪水
+     * @return
+     */
+    public List<PositionDto> selectPositionSalary();
 }

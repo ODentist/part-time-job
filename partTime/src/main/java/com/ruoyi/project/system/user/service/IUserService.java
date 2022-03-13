@@ -178,4 +178,30 @@ public interface IUserService
      * @return 结果
      */
     public int changeStatus(User user);
+
+    /**
+     * 查询用户总数
+     * @return
+     */
+    public int selectAllUserCounts();
+
+    /**
+     * 查询今天注册的用户
+     */
+    public int todayRegister();
+
+    /**
+     * 查询昨天注册的用户
+     */
+    public int yesterdayRegister();
+
+    /**
+     * 查询男求职者人数
+     */
+    public int manUser();
+
+    /**
+     * 查询女求职者人数
+     */
+    public int womanUser();
 }
