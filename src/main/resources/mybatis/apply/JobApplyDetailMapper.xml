@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.parttime.project.job.apply.mapper.JobApplyDetailMapper">
+    
+    <resultMap type="JobApplyDetail" id="JobApplyDetailResult">
+        <result property="applyId"    column="apply_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="enterpriseId"    column="enterprise_id"    />
+        <result property="positionId"    column="position_id"    />
+        <result property="resumeId"    column="resume_id"    />
+        <result property="applyTime"    column="apply_time"    />
+    </resultMap>
+
+    <sql id="selectJobApplyDetailVo">
+        select apply_id, user_id, enterprise_id, position_id, resume_id, apply_time from job_apply_detail
+    </sql>
+
+    <select id="selectJobApplyDetailList" parameterType="JobApplyDetail" resultMap="JobApplyDetailResult">
+        <include refid="selectJobApplyDetailVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="enterpriseId != null "> and enterprise_id = #{enterpriseId}</if>
+            <if test="positionId != null "> and position_id = #{positionId}</if>
+            <if test="resumeId != null "> and resume_id = #{resumeId}</if>
+            <if test="applyTime != null "> and apply_time = #{applyTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectJobApplyDetailById" parameterType="Long" resultMap="JobApplyDetailResult">
+        <include refid="selectJobApplyDetailVo"/>
+        where apply_id = #{applyId}
+    </select>
+        
+    <insert id="insertJobApplyDetail" parameterType="JobApplyDetail" useGeneratedKeys="true" keyProperty="applyId">
+        insert into job_apply_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null ">user_id,</if>
+            <if test="enterpriseId != null ">enterprise_id,</if>
+            <if test="positionId != null ">position_id,</if>
+            <if test="resumeId != null ">resume_id,</if>
+            <if test="applyTime != null ">apply_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null ">#{userId},</if>
+            <if test="enterpriseId != null ">#{enterpriseId},</if>
+            <if test="positionId != null ">#{positionId},</if>
+            <if test="resumeId != null ">#{resumeId},</if>
+            <if test="applyTime != null ">#{applyTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateJobApplyDetail" parameterType="JobApplyDetail">
+        update job_apply_detail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null ">user_id = #{userId},</if>
+            <if test="enterpriseId != null ">enterprise_id = #{enterpriseId},</if>
+            <if test="positionId != null ">position_id = #{positionId},</if>
+            <if test="resumeId != null ">resume_id = #{resumeId},</if>
+            <if test="applyTime != null ">apply_time = #{applyTime},</if>
+        </trim>
+        where apply_id = #{applyId}
+    </update>
+
+    <delete id="deleteJobApplyDetailById" parameterType="Long">
+        delete from job_apply_detail where apply_id = #{applyId}
+    </delete>
+
+    <delete id="deleteJobApplyDetailByIds" parameterType="String">
+        delete from job_apply_detail where apply_id in 
+        <foreach item="applyId" collection="array" open="(" separator="," close=")">
+            #{applyId}
+        </foreach>
+    </delete>
+
+    <select id="selectJobApplyDetail" parameterType="Long" resultMap="JobApplyDetailResult">
+        <include refid="selectJobApplyDetailVo"/>
+        where user_id = #{userId} and position_id = #{positionId}
+    </select>
+
+    <delete id="deleteJobApplyDetailByPositionIds" parameterType="String">
+        delete from job_apply_detail where position_id in
+        <foreach item="positionId" collection="array" open="(" separator="," close=")">
+            #{positionId}
+        </foreach>
+    </delete>
+
+    <select id="selectCountByDay" parameterType="Long" resultType="int">
+        select count(1) from job_apply_detail
+        where user_id = #{userId} AND DATE_FORMAT(apply_time, '%Y-%m-%d') = CURRENT_DATE()
+    </select>
+</mapper>

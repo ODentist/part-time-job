@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.parttime.project.job.receive.mapper.JobReceiveDetailMapper">
+    
+    <resultMap type="JobReceiveDetail" id="JobReceiveDetailResult">
+        <result property="receiveId"    column="receive_id"    />
+        <result property="applyId"    column="apply_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="positionId"    column="position_id"    />
+        <result property="resumeId"    column="resume_id"    />
+        <result property="receiveTime"    column="receive_time"    />
+        <result property="operateStatus"    column="operate_status"    />
+        <result property="operateResult"    column="operate_result"    />
+        <result property="reason"    column="reason"    />
+    </resultMap>
+
+    <sql id="selectJobReceiveDetailVo">
+        select receive_id, apply_id, user_id, position_id, resume_id, receive_time, operate_status, operate_result, reason from job_receive_detail
+    </sql>
+
+    <select id="selectJobReceiveDetailList" parameterType="JobReceiveDetail" resultMap="JobReceiveDetailResult">
+        <include refid="selectJobReceiveDetailVo"/>
+        <where>  
+            <if test="applyId != null "> and apply_id = #{applyId}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="positionId != null "> and position_id = #{positionId}</if>
+            <if test="resumeId != null "> and resume_id = #{resumeId}</if>
+            <if test="receiveTime != null "> and receive_time = #{receiveTime}</if>
+            <if test="operateStatus != null "> and operate_status = #{operateStatus}</if>
+            <if test="operateResult != null "> and operate_result = #{operateResult}</if>
+            <if test="reason != null  and reason != ''"> and reason = #{reason}</if>
+        </where>
+    </select>
+    
+    <select id="selectJobReceiveDetailById" parameterType="Long" resultMap="JobReceiveDetailResult">
+        <include refid="selectJobReceiveDetailVo"/>
+        where receive_id = #{receiveId}
+    </select>
+
+    <select id="selectJobDelivery" parameterType="Long" resultType="com.parttime.project.job.receive.vo.DeliveryVO">
+    SELECT a.operate_status operateStatus,a.operate_result operateResult ,a.reason reason,b.position_name positionName,c.resume_name resumeName FROM
+	job_receive_detail a JOIN job_position b ON a.position_id = b.position_id
+	JOIN job_resume c ON a.resume_id = c.resume_id
+	where a.apply_id = #{applyId}
+    </select>
+
+    <insert id="insertJobReceiveDetail" parameterType="JobReceiveDetail" useGeneratedKeys="true" keyProperty="receiveId">
+        insert into job_receive_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="applyId != null ">apply_id,</if>
+            <if test="userId != null ">user_id,</if>
+            <if test="positionId != null ">position_id,</if>
+            <if test="resumeId != null ">resume_id,</if>
+            <if test="receiveTime != null ">receive_time,</if>
+            <if test="operateStatus != null ">operate_status,</if>
+            <if test="operateResult != null ">operate_result,</if>
+            <if test="reason != null  and reason != ''">reason,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="applyId != null ">#{applyId},</if>
+            <if test="userId != null ">#{userId},</if>
+            <if test="positionId != null ">#{positionId},</if>
+            <if test="resumeId != null ">#{resumeId},</if>
+            <if test="receiveTime != null ">#{receiveTime},</if>
+            <if test="operateStatus != null ">#{operateStatus},</if>
+            <if test="operateResult != null ">#{operateResult},</if>
+            <if test="reason != null  and reason != ''">#{reason},</if>
+         </trim>
+    </insert>
+
+    <update id="updateJobReceiveDetail" parameterType="JobReceiveDetail">
+        update job_receive_detail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="applyId != null ">apply_id = #{applyId},</if>
+            <if test="userId != null ">user_id = #{userId},</if>
+            <if test="positionId != null ">position_id = #{positionId},</if>
+            <if test="resumeId != null ">resume_id = #{resumeId},</if>
+            <if test="receiveTime != null ">receive_time = #{receiveTime},</if>
+            <if test="operateStatus != null ">operate_status = #{operateStatus},</if>
+            <if test="operateResult != null ">operate_result = #{operateResult},</if>
+            <if test="reason != null  and reason != ''">reason = #{reason},</if>
+            <if test="operateTime != null">operate_time = #{operateTime},</if>
+        </trim>
+        where receive_id = #{receiveId}
+    </update>
+
+    <delete id="deleteJobReceiveDetailById" parameterType="Long">
+        delete from job_receive_detail where receive_id = #{receiveId}
+    </delete>
+
+    <delete id="deleteJobReceiveDetailByIds" parameterType="String">
+        delete from job_receive_detail where receive_id in 
+        <foreach item="receiveId" collection="array" open="(" separator="," close=")">
+            #{receiveId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteJobReceiveDetailByPositionIds" parameterType="String">
+        delete from job_receive_detail where position_id in
+        <foreach item="positionId" collection="array" open="(" separator="," close=")">
+            #{positionId}
+        </foreach>
+    </delete>
+</mapper>
