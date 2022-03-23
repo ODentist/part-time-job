@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <!-- 日志存放路径 -->
-	<property name="log.path" value="/home/parttime/logs" />
+	<property name="log.path" value="/usr/local/partTime/logs" />
     <!-- 日志输出格式 -->
 	<property name="log.pattern" value="%d{HH:mm:ss.SSS} [%thread] %-5level %logger{20} - [%method,%line] - %msg%n" />
 
@@ -11,6 +11,9 @@
 			<pattern>${log.pattern}</pattern>
 		</encoder>
 	</appender>
+    	<root level="info">
+    		<appender-ref ref="console" />
+    	</root>
 	
 	<!-- 系统日志输出 -->
 	<appender name="file_info" class="ch.qos.logback.core.rolling.RollingFileAppender">
@@ -76,9 +79,7 @@
 	<!-- Spring日志级别控制  -->
 	<logger name="org.springframework" level="warn" />
 
-	<root level="info">
-		<appender-ref ref="console" />
-	</root>
+
 	
 	<!--系统操作日志-->
     <root level="info">
@@ -90,4 +91,20 @@
     <logger name="sys-user" level="info">
         <appender-ref ref="sys-user"/>
     </logger>
+
+
+    <appender name="MyBatis" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.path}/mybatis-sql.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${log.path}/mybatis-sql.log.%d{yyyy-MM-dd}</FileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${log.pattern}</pattern>
+        </encoder>
+    </appender>
+    <logger name="mybatis.sql" level="DEBUG">
+        <appender-ref ref="MyBatis"/>
+    </logger>
+
 </configuration> 
