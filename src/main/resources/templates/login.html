@@ -39,7 +39,7 @@
                     <li><i class="fa fa-arrow-circle-o-right m-r-xs"></i> 学习</li>
                     <li><i class="fa fa-arrow-circle-o-right m-r-xs"></i> 管理</li>
                 </ul>
-                <strong>还没有账号？ <a href="#" id="register">立即注册&raquo;</a></strong>
+                <strong>还没有账号？ <a href="#" id="register" style="color: white">立即注册&raquo;</a></strong>
             </div>
         </div>
         <div class="col-sm-5">
@@ -50,6 +50,9 @@
 
                 <input type="text"     name="username" class="form-control uname"     placeholder="用户名" />
                 <input type="password" name="password" class="form-control pword"     placeholder="密码" />
+
+                <input type="text" name="validateCode" class="form-control code" style="margin-top: 15px ;width: 50%;display: inline" placeholder="验证码" />
+                <img id="imgcode" src="#" th:src="@{captcha/captchaImage}"/>
 
                 <button class="btn btn-success btn-block" id="btnSubmit" data-loading="正在验证登录，请稍后...">登录</button>
             </form>

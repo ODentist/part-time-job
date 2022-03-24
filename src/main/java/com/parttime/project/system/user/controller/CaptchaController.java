@@ -1,92 +1,104 @@
 package com.parttime.project.system.user.controller;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import javax.annotation.Resource;
+import java.io.ByteArrayOutputStream;
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
-import com.google.code.kaptcha.Constants;
-import com.google.code.kaptcha.Producer;
 import com.parttime.framework.web.controller.BaseController;
 
 /**
  * 图片验证码（支持算术形式）
- * 
+ *
  * @author parttime
  */
 @Controller
 @RequestMapping("/captcha")
-public class CaptchaController extends BaseController
-{
-    @Resource(name = "captchaProducer")
-    private Producer captchaProducer;
-
-    @Resource(name = "captchaProducerMath")
-    private Producer captchaProducerMath;
+public class CaptchaController extends BaseController {
+    private static final int WIDTH = 110; // 验证码图片宽度
+    private static final int HEIGHT = 32; // 验证码图片高度
 
     /**
      * 验证码生成
      */
     @GetMapping(value = "/captchaImage")
-    public ModelAndView getKaptchaImage(HttpServletRequest request, HttpServletResponse response)
-    {
-        ServletOutputStream out = null;
-        try
-        {
-            HttpSession session = request.getSession();
-            response.setDateHeader("Expires", 0);
-            response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
-            response.addHeader("Cache-Control", "post-check=0, pre-check=0");
-            response.setHeader("Pragma", "no-cache");
-            response.setContentType("image/jpeg");
+    public void getKaptchaImage(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        HttpSession session = request.getSession();
+        response.setContentType("image/jpeg");
+        ServletOutputStream sos = response.getOutputStream();
+        // 设置浏览器不要缓存此图片
+        response.setHeader("Pragma", "No-cache");
+        response.setHeader("Cache-Control", "no-cache");
+        response.setDateHeader("Expires", 0);
+        // 创建内存图象并获得其图形上下文
+        BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
+        Graphics g = image.getGraphics();
+        // 产生随机的认证码
+        char[] rands = generateCheckCode();
+        // 产生图像
+        drawBackground(g);
+        drawRands(g, rands);
+        // 结束图像的绘制过程，完成图像
+        g.dispose();
+        // 将图像输出到客户端
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        ImageIO.write(image, "JPEG", bos);
+        byte[] buf = bos.toByteArray();
+        response.setContentLength(buf.length);
+        // 下面的语句也可写成：bos.writeTo(sos);
+        sos.write(buf);
+        bos.close();
+        sos.close();
+        // 将当前验证码存入到Session中
+        session.setAttribute("check_code", new String(rands));
+        // 直接使用下面的代码将有问题，Session对象必须在提交响应前获得
+        // request.getSession().setAttribute("check_code",new String(rands));
+    }
 
-            String type = request.getParameter("type");
-            String capStr = null;
-            String code = null;
-            BufferedImage bi = null;
-            if ("math".equals(type))
-            {
-                String capText = captchaProducerMath.createText();
-                capStr = capText.substring(0, capText.lastIndexOf("@"));
-                code = capText.substring(capText.lastIndexOf("@") + 1);
-                bi = captchaProducerMath.createImage(capStr);
-            }
-            else if ("char".equals(type))
-            {
-                capStr = code = captchaProducer.createText();
-                bi = captchaProducer.createImage(capStr);
-            }
-            session.setAttribute(Constants.KAPTCHA_SESSION_KEY, code);
-            out = response.getOutputStream();
-            ImageIO.write(bi, "jpg", out);
-            out.flush();
 
+    // 生成一个4字符的验证码
+    private char[] generateCheckCode() {
+        // 定义验证码的字符表
+        String chars = "0123456789abcdefghijklmnopqrstuvwxyz";
+        char[] rands = new char[4];
+        for (int i = 0; i < 4; i++) {
+            int rand = (int) (Math.random() * 36);
+            rands[i] = chars.charAt(rand);
         }
-        catch (Exception e)
-        {
-            e.printStackTrace();
+        return rands;
+    }
+
+    private void drawRands(Graphics g, char[] rands) {
+        g.setColor(Color.BLACK);
+        g.setFont(new Font(null, Font.ITALIC | Font.BOLD, 18));
+        // 在不同的高度上输出验证码的每个字符
+        g.drawString("" + rands[0], 3, 17);
+        g.drawString("" + rands[1], 30, 15);
+        g.drawString("" + rands[2], 56, 18);
+        g.drawString("" + rands[3], 82, 16);
+//        System.out.println(rands);
+    }
+
+    private void drawBackground(Graphics g) {
+        // 画背景
+        g.setColor(new Color(0xDCDCDC));
+        g.fillRect(0, 0, WIDTH, HEIGHT);
+        // 随机产生120个干扰点
+        for (int i = 0; i < 120; i++) {
+            int x = (int) (Math.random() * WIDTH);
+            int y = (int) (Math.random() * HEIGHT);
+            int red = (int) (Math.random() * 255);
+            int green = (int) (Math.random() * 255);
+            int blue = (int) (Math.random() * 255);
+            g.setColor(new Color(red, green, blue));
+            g.drawOval(x, y, 1, 0);
         }
-        finally
-        {
-            try
-            {
-                if (out != null)
-                {
-                    out.close();
-                }
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-        }
-        return null;
     }
 }

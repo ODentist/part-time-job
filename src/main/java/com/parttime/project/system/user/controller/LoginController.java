@@ -22,7 +22,7 @@ import com.parttime.framework.web.domain.AjaxResult;
 
 /**
  * 登录验证
- * 
+ *
  * @author parttime
  */
 @Controller
@@ -43,7 +43,7 @@ public class LoginController extends BaseController
 
     @PostMapping("/login")
     @ResponseBody
-    public AjaxResult ajaxLogin(String username, String password, Boolean tourist)
+    public AjaxResult ajaxLogin(String username, String password, Boolean tourist,String  validateCode,HttpServletRequest request, HttpServletResponse response)
     {
         UsernamePasswordToken token;
         if (tourist) {
@@ -56,23 +56,28 @@ public class LoginController extends BaseController
             token = new UsernamePasswordToken(username, password);
         }
 
-        Subject subject = SecurityUtils.getSubject();
-        try
-        {
-            subject.login(token);
-            if (tourist) {
-                return AjaxResult.success("登录成功", "tourist");
-            }
-
-            return success();
-        }
-        catch (AuthenticationException e)
-        {
-            String msg = "用户或密码错误";
-            if (StringUtils.isNotEmpty(e.getMessage()))
+        if (request.getSession().getAttribute("check_code").equals(validateCode)) {
+            Subject subject = SecurityUtils.getSubject();
+            try
             {
-                msg = e.getMessage();
+                subject.login(token);
+                if (tourist) {
+                    return AjaxResult.success("登录成功", "tourist");
+                }
+
+                return success();
             }
+            catch (AuthenticationException e)
+            {
+                String msg = "用户或密码错误";
+                if (StringUtils.isNotEmpty(e.getMessage()))
+                {
+                    msg = e.getMessage();
+                }
+                return error(msg);
+            }
+        } else {
+            String msg = "验证码错误";
             return error(msg);
         }
     }
